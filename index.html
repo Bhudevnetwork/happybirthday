@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birth Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: black; /* Black background */
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .wave-text {
+      font-size: 8rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      animation: wave 3s infinite, color-shift 5s infinite;
+      z-index: 1;
+    }
+
+    @keyframes wave {
+      0%, 100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-20px);
+        opacity: 0.7;
+      }
+    }
+
+    @keyframes color-shift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .firework {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: radial-gradient(circle, white, transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fade-out 1.5s ease-out forwards;
+    }
+
+    @keyframes fade-out {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+
+    .spark {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: radial-gradient(circle, yellow, transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: spark-move 1.5s ease-out forwards;
+    }
+
+    @keyframes spark-move {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wave-text">Happy Birth</div>
+
+  <script>
+    function createFirework() {
+      const firework = document.createElement('div');
+      firework.classList.add('firework');
+      firework.style.top = Math.random() * 80 + 'vh';
+      firework.style.left = Math.random() * 100 + 'vw';
+      firework.style.background = `radial-gradient(circle, ${getRandomColor()}, transparent)`;
+
+      document.body.appendChild(firework);
+
+      const sparks = 20;
+      for (let i = 0; i < sparks; i++) {
+        const spark = document.createElement('div');
+        spark.classList.add('spark');
+
+        const angle = (Math.PI * 2 * i) / sparks;
+        const distance = Math.random() * 100 + 50;
+        const x = Math.cos(angle) * distance + 'px';
+        const y = Math.sin(angle) * distance + 'px';
+
+        spark.style.setProperty('--x', x);
+        spark.style.setProperty('--y', y);
+        spark.style.top = firework.style.top;
+        spark.style.left = firework.style.left;
+        spark.style.background = `radial-gradient(circle, ${getRandomColor()}, transparent)`;
+
+        document.body.appendChild(spark);
+
+        setTimeout(() => {
+          spark.remove();
+        }, 1500);
+      }
+
+      setTimeout(() => {
+        firework.remove();
+      }, 1500);
+    }
+
+    function getRandomColor() {
+      const colors = ["red", "orange", "yellow", "green", "blue", "purple", "white", "pink"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    setInterval(createFirework, 500);
+  </script>
+</body>
+</html>
